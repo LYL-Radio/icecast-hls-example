@@ -1,35 +1,21 @@
-version: '3.7'
-
 services:
 
   liquidsoap:
-    image: savonet/liquidsoap:v1.4.4
+    image: savonet/liquidsoap:v2.2.5
     command: ["/script.liq"]
-    depends_on:
-      - setup
     ports:
     - 8000:8000
     volumes:
-    - hls:/hls:rw
+    - hls:/tmp
     - ./script.liq:/script.liq:ro
-    environment: 
-      SOURCE_PASSWORD: "hackme"
 
   nginx:
     image: nginx
     ports:
     - 8080:80
     volumes:
-    - hls:/mnt/hls:ro
+    - hls:/mnt:ro
     - ./nginx.conf:/etc/nginx/nginx.conf:ro
 
-  setup:
-    image: alpine
-    entrypoint: ["sh","-c"]
-    command: 
-    - "chown 10000:10001 /hls"
-    volumes:
-    - hls:/hls
-
 volumes:
-  hls:
+  hls: {}
